@@ -18,7 +18,13 @@ mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error(err));
 
+  console.log("near contacts");
+  
 app.use('/contacts', contactsRouter);
+
+
+console.log("Rest of the routes");
+
 
 app.use('*', (req, res) => {
   res.status(404).json({ message: 'Route not found' });
