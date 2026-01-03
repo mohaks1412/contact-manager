@@ -3,7 +3,7 @@ import axios from 'axios';
 class ContactService {
   constructor() {
     this.api = axios.create({
-      baseURL: 'http://localhost:5000/api',
+      baseURL: import.meta.env.VITE_SERVER_URI || 'http://localhost:5000/api',
     });
   }
 
