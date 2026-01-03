@@ -1,32 +1,32 @@
-import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import contactsRouter from './routes/contact.js';
 import dotenv from 'dotenv';
-import contactsRouter from './routes/contact';
+import express from 'express';
 
 dotenv.config();
-const app = express();
 
-app.use(cors({
-  origin: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-}));
-app.use(express.json());
+let conn = null; // cache DB connection
 
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error(err));
+export default async function handler(req, res) {
+  // Run CORS per request
+  await new Promise((resolve, reject) => {
+    cors({ origin: true })(req, res, (err) => {
+      if (err) reject(err);
+      else resolve();
+    });
+  });
 
-  console.log("near contacts");
-  
-app.use('/contacts', contactsRouter);
+  // Connect to MongoDB once
+  if (!conn) {
+    conn = await mongoose.connect(process.env.MONGODB_URI);
+    console.log('MongoDB connected');
+  }
 
+  // Simple routing for demo
+  if (req.url.startsWith('/contacts')) {
+    return contactsRouter(req, res);
+  }
 
-console.log("Rest of the routes");
-
-
-app.use('*', (req, res) => {
   res.status(404).json({ message: 'Route not found' });
-});
-
-export default app;
+}
