@@ -20,4 +20,8 @@ mongoose.connect(process.env.MONGODB_URI)
 
 app.use('/contacts', contactsRouter);
 
+app.use('*', (req, res) => {
+  res.status(404).json({ message: 'Route not found' });
+});
+
 export default app;
