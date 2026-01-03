@@ -8,11 +8,10 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? process.env.FRONTEND_URL?.split(',') || []
-    : true
+  origin: process.env.FRONTEND_URI,  // Frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
 }));
-
 app.use(express.json());
 
 mongoose.connect(process.env.MONGODB_URI)
