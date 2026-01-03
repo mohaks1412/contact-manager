@@ -7,7 +7,12 @@ import contactsRouter from './routes/contact.js';
 dotenv.config();
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' 
+    ? process.env.FRONTEND_URL?.split(',') || []
+    : true
+}));
+
 app.use(express.json());
 
 mongoose.connect(process.env.MONGODB_URI)
